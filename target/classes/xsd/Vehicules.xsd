@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/vehicules"
+	xmlns="http://www.fleetman.com/vehicules"
+	elementFormDefault="qualified"
+	xmlns:sh="http://www.fleetman.com/shared"><!-- tells the schema that emp:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/shared(/employe) -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+
+	<!-- Immatriculation type definition -->
+
+	<xs:simpleType name="immatType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9][0-9][0-9]-[A-Z][A-Z]-[0-9][0-9][0-9]" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Modele type definition -->
+
+	<xs:simpleType name="modeleType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="camion-PorteEngins" />
+			<xs:enumeration value="camion-aPlateau" />
+			<xs:enumeration value="camion-Grumiers" />
+			<xs:enumeration value="camion-Maintenance" />
+			<xs:enumeration value="transpoPersonnel" />
+			<xs:enumeration value="camion-citerne" />
+			<xs:enumeration value="benneBasculante" />
+			<xs:enumeration value="camion-Frigorifiques" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Etat type definition -->
+
+	<xs:simpleType name="etatType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EnService" />
+			<xs:enumeration value="EnMaintenance" />
+			<xs:enumeration value="Disponible" />
+			<xs:enumeration value="EnPanne" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Vehicule complex type definition -->
+
+	<xs:complexType name="vehiculeType">
+
+		<xs:sequence>
+
+			<xs:element name="immatriculation" type="immatType" />
+
+			<xs:element name="marque" type="xs:string" />
+
+			<xs:element name="modele" type="modeleType" />
+
+			<xs:element name="etat" type="etatType" />
+
+			<xs:element name="capaciteCharge" type="xs:int" />
+
+			<xs:element name="dateDernMaintenance" type="sh:dateType" />
+
+
+		</xs:sequence>
+
+		<xs:attribute name="idVehicule" type="sh:idType" use="required">
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<!-- VehiculeS complex type definition -->
+
+	<xs:complexType name="vehiculeStype">
+		<xs:sequence>
+			<xs:element name="vehicule" type="vehiculeType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Global element for Vehicules -->
+
+	<xs:element name="Vehicules" type="vehiculeStype">
+
+
+		<!-- Primary key definition for vehicule element -->
+
+		<xs:key name="idVehicule">
+
+			<xs:selector xpath="vehicule" />
+			<xs:field xpath="@idVehicule"></xs:field>
+
+		</xs:key>
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDVehicule">
+
+			<xs:selector xpath="vehicule" />
+			<xs:field xpath="@idVehicule"></xs:field>
+
+		</xs:unique>
+
+	</xs:element>
+
+</xs:schema>

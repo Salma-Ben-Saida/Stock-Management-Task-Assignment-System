@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/employe"
+	xmlns="http://www.fleetman.com/employe"
+	elementFormDefault="qualified"
+	xmlns:sh="http://www.fleetman.com/shared"> <!-- tells the schema that emp:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/shared -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+
+	<!-- Email type definition -->
+
+	<xs:simpleType name="EmailType">
+		<xs:restriction base="xs:string">
+           <xs:pattern value=".+@.+\..+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Telephone type definition -->
+
+	<xs:simpleType name="TelephoneType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\+\d{11}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Password type definition -->
+
+	<xs:simpleType name="passwordType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z\d@$!%*?&amp;]{8,}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Login type definition -->
+
+	<xs:simpleType name="loginType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z0-9_]{3,20}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- StatutEmp type definition -->
+
+	<xs:simpleType name="StatutEmployeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="disponible" />
+			<xs:enumeration value="enService" />
+			<xs:enumeration value="enConge" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Defining a pair with a Date and an int -->
+
+	<xs:complexType name="HeureTravailPair">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" />
+			<xs:element name="heures" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- heuresTravail type definition -->
+
+	<xs:complexType name="heuresTravailType">
+		<xs:sequence>
+			<xs:element name="heureTravail" maxOccurs="unbounded"
+				type="HeureTravailPair" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<!-- Abstract Employee Type -->
+
+	<xs:complexType name="EmployeType" abstract="true">
+
+		<xs:sequence>
+
+			<xs:element name="login" type="loginType" />
+
+			<xs:element name="motDePasse" type="passwordType" />
+
+			<xs:element name="nom" type="xs:string" />
+
+			<xs:element name="prenom" type="xs:string" />
+
+			<xs:element name="statutEmp" type="StatutEmployeType" />
+
+			<xs:element name="email" type="EmailType" />
+
+			<xs:element name="telephone" type="TelephoneType" />
+
+			<xs:element name="dateNaissance" type="sh:dateType" />
+
+			<xs:element name="datePriseDePoste" type="sh:dateType" />
+
+			<xs:element name="heuresTravail" type="heuresTravailType"
+				minOccurs="0" />
+
+		</xs:sequence>
+
+		<xs:attribute name="id" type="sh:idType" use="required" />
+
+	</xs:complexType>
+
+
+	<!-- Chauffeur definition -->
+
+	<!-- Chauffeur complex type that extends Employe -->
+
+	<xs:complexType name="chauffeurType">
+
+		<xs:complexContent>
+
+			<xs:extension base="EmployeType"> <!-- Extending the Employe type -->
+
+
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<!-- ChauffeurS complex type -->
+
+	<xs:complexType name="chauffeurStype">
+		<xs:sequence>
+
+			<xs:element name="Chauffeur" type="chauffeurType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+
+
+	</xs:complexType>
+
+	<!-- Global Element for ChauffeurS -->
+
+	<xs:element name="Chauffeurs" type="chauffeurStype">
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDChauff">
+
+			<xs:selector xpath="Chauffeur" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+		<!-- Primary key definition for Chauffeur element -->
+
+		<xs:key name="idChauffeur">
+
+			<xs:selector xpath="Chauffeur" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:key>
+
+	</xs:element>
+
+
+	<!-- Gestionnaire de Flotte definition -->
+
+
+	<!-- GestionnaireFlotte complex type that extends Employe -->
+
+	<xs:complexType name="gestionnaireType">
+
+		<xs:complexContent>
+
+			<xs:extension base="EmployeType"> <!-- Extending the Employe type -->
+
+
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- GestionnaireS de Flotte complex type -->
+
+	<xs:complexType name="GestionnaireStype">
+		<xs:sequence>
+
+			<xs:element name="GestionnaireFlotte" type="gestionnaireType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<!-- Global Element for GestionnaireS de Flotte -->
+
+	<xs:element name="Gestionnaires" type="GestionnaireStype">
+
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDGestionnaire">
+
+			<xs:selector xpath="GestionnaireFlotte" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+		<!-- Primary key definition for GestionnaireFlotte element -->
+
+		<xs:unique name="idGestionnaire">
+
+			<xs:selector xpath="Chauffeur" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+	</xs:element>
+
+
+	<!-- Technicien definition -->
+
+
+	<!-- Technicien complex type that extends Employe -->
+
+	<xs:complexType name="technicienType">
+
+		<xs:complexContent>
+
+			<xs:extension base="EmployeType"> <!-- Extending the Employe type -->
+
+
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- TechnicienS complex type -->
+
+	<xs:complexType name="technicienStype">
+		<xs:sequence>
+
+			<xs:element name="Technicien" type="technicienType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<!-- Global Element for TechnicienS -->
+
+	<xs:element name="Techniciens" type="technicienStype">
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDTech">
+
+			<xs:selector xpath="Chauffeur" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+		<!-- Primary key definition for Technicien element -->
+
+		<xs:unique name="idTechnicien">
+
+			<xs:selector xpath="Technicien" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+	</xs:element>
+
+
+	<!-- ResponsableRH definition -->
+
+
+	<!-- ResponsableRH complex type that extends Employe -->
+
+	<xs:complexType name="ResponsableRHType">
+
+		<xs:complexContent>
+
+			<xs:extension base="EmployeType"> <!-- Extending the Employe type -->
+
+
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- ResponsableS complex type -->
+
+	<xs:complexType name="responsableStype">
+		<xs:sequence>
+
+			<xs:element name="ResponsableRH" type="ResponsableRHType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<!-- Global Element for ResponsableS -->
+
+	<xs:element name="ResponsablesRH" type="responsableStype">
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDRH">
+
+			<xs:selector xpath="ResponsableRH" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+		<!-- Primary key definition for ResponsableRH element -->
+
+		<xs:unique name="idResponsable">
+
+			<xs:selector xpath="ResponsableRH" />
+			<xs:field xpath="@id"></xs:field>
+
+		</xs:unique>
+
+
+	</xs:element>
+	
+	
+
+
+</xs:schema>

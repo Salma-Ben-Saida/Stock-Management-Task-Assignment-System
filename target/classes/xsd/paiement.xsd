@@ -1,0 +1,95 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/paie"
+	xmlns="http://www.fleetman.com/paie"
+	elementFormDefault="qualified"
+	xmlns:sh="http://www.fleetman.com/shared"
+	xmlns:emp="http://www.fleetman.com/employe">
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+	<!-- Import the Employe.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/employe"
+		schemaLocation="Employe.xsd" />
+
+
+	<xs:element name="PayrollRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+
+					<xs:sequence>
+						<xs:element name="idChauff" type="sh:idType" />
+						<xs:element name="heuresTravail"
+							type="emp:heuresTravailType" />
+					</xs:sequence>
+
+					<xs:sequence>
+						<xs:element name="idTech" type="sh:idType" />
+						<xs:element name="heuresTravail"
+							type="emp:heuresTravailType" />
+					</xs:sequence>
+
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idChRef1" refer="emp:idChauffeur">
+			<xs:selector xpath="PayrollRequest" />
+			<xs:field xpath="idChauff"></xs:field>
+
+		</xs:keyref>
+
+
+		<!-- Reference to foreign key idTechnicien -->
+
+		<xs:keyref name="idTechRef1" refer="emp:idTechnicien">
+			<xs:selector xpath="PayrollRequest" />
+			<xs:field xpath="idTech"></xs:field>
+
+		</xs:keyref>
+
+	</xs:element>
+
+
+	<xs:element name="PayrollResponse">
+		<xs:complexType>
+
+			<xs:sequence>
+
+				<xs:choice>
+					<xs:element name="idChauff" type="sh:idType" />
+					<xs:element name="idTech" type="sh:idType" />
+				</xs:choice>
+
+				<xs:element name="salaire" type="xs:decimal" />
+			</xs:sequence>
+
+		</xs:complexType>
+
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idChRef2" refer="emp:idChauffeur">
+			<xs:selector xpath="PayrollResponse" />
+			<xs:field xpath="idChauff"></xs:field>
+
+		</xs:keyref>
+
+
+		<!-- Reference to foreign key idTechnicien -->
+
+		<xs:keyref name="idTechRef2" refer="emp:idTechnicien">
+			<xs:selector xpath="PayrollResponse" />
+			<xs:field xpath="idTech"></xs:field>
+
+		</xs:keyref>
+	</xs:element>
+
+
+</xs:schema>

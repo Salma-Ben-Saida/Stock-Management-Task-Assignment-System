@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/diagnostic"
+	xmlns="http://www.fleetman.com/diagnostic"
+	elementFormDefault="qualified"
+	xmlns:emp="http://www.fleetman.com/employe"
+	xmlns:veh="http://www.fleetman.com/vehicules"
+	xmlns:sh="http://www.fleetman.com/shared"><!-- tells the schema that emp:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/shared -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+
+	<!-- Import the Employe.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/employe"
+		schemaLocation="Employe.xsd" />
+
+	<!-- Import the Vehicules.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/vehicules"
+		schemaLocation="Vehicules.xsd" />
+
+
+	<!-- Diagnostic complex type definition -->
+
+	<xs:complexType name="diagnosticType">
+
+		<xs:sequence>
+
+			<xs:element name="status" type="sh:statutType" />
+
+			<xs:element name="dateDiagnostic" type="sh:dateType" minOccurs="0" />
+
+			<xs:element name="description" type="xs:string" minOccurs="0" />
+
+			<xs:element name="idTech" type="sh:idType" />
+
+			<xs:element name="idVehic" type="sh:idType" />
+
+		</xs:sequence>
+
+		<xs:attribute name="idDiagnostic" type="sh:idType" use="required" />
+
+	</xs:complexType>
+
+
+	<!-- DiagnosticS complex type definition -->
+
+
+	<xs:complexType name="diagnosticStype">
+		<xs:sequence>
+			<xs:element name="diagnostic" type="diagnosticType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<!-- Global element for DiagnosticS -->
+
+	<xs:element name="Diagnostics" type="diagnosticStype">
+
+		<!-- Primary key definition for diagnostic element -->
+
+		<xs:key name="idDiagnostic">
+
+			<xs:selector xpath="diagnostic" />
+			<xs:field xpath="@idDiagnostic" />
+
+		</xs:key>
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDdiagnostic">
+
+			<xs:selector xpath="diagnostic" />
+			<xs:field xpath="@idDiagnostic" />
+
+		</xs:unique>
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idTechRef" refer="emp:idTechnicien">
+
+			<xs:selector xpath="diagnostic" />
+			<xs:field xpath="idTech" />
+
+		</xs:keyref>
+
+
+		<!-- Reference to foreign key idVehicule -->
+
+		<xs:keyref name="idVehRef" refer="veh:idVehicule">
+			<xs:selector xpath="diagnostic" />
+			<xs:field xpath="idVehic" />
+
+		</xs:keyref>
+
+
+	</xs:element>
+
+
+</xs:schema>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/affectations"
+	xmlns="http://www.fleetman.com/affectations"
+	elementFormDefault="qualified"
+	xmlns:sh="http://www.fleetman.com/shared"
+	xmlns:veh="http://www.fleetman.com/vehicules"
+	xmlns:tr="http://www.fleetman.com/trajets"
+	xmlns:emp="http://www.fleetman.com/employe"><!-- tells the schema that emp:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/employe -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+	<!-- Import the Employe.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/employe"
+		schemaLocation="Employe.xsd" />
+
+	<!-- Import the Vehicules.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/vehicules"
+		schemaLocation="Vehicules.xsd" />
+
+	<!-- Import the Vehicules.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/trajets"
+		schemaLocation="Trajets.xsd" />
+
+
+	<!-- Affectation complex type definition  -->
+
+	<xs:complexType name="affectationType">
+
+		<xs:sequence>
+
+			<xs:element name="idChauff" type="sh:idType" />
+
+
+			<xs:element name="idVehic" type="sh:idType" />
+
+			<xs:element name="idTrajet" type="sh:idType" />
+
+
+		</xs:sequence>
+
+		<xs:attribute name="idAffectation" type="sh:idType" use="required" />
+
+	</xs:complexType>
+
+
+	<!-- AffectationS complex type definition -->
+
+
+	<xs:complexType name="affectationStype">
+		<xs:sequence>
+			<xs:element name="affectation" type="affectationType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Global element for Affectations -->
+
+	<xs:element name="Affectations" type="affectationStype">
+
+		<!-- Primary key definition for affectation element -->
+
+		<xs:key name="idAffectation">
+
+			<xs:selector xpath="affectation" />
+			<xs:field xpath="@idAffectation" />
+
+		</xs:key>
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDaffectation">
+
+			<xs:selector xpath="affectation" />
+			<xs:field xpath="@idAffectation" />
+
+		</xs:unique>
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idChRef" refer="emp:idChauffeur">
+
+			<xs:selector xpath="affectation" />
+			<xs:field xpath="idChauff" />
+
+		</xs:keyref>
+
+
+		<!-- Reference to foreign key idVehicule -->
+
+		<xs:keyref name="idVehRef" refer="veh:idVehicule">
+			<xs:selector xpath="affectation" />
+			<xs:field xpath="idVehic" />
+
+		</xs:keyref>
+
+		<!-- Reference to foreign key idTrajet -->
+
+		<xs:keyref name="idTrRef" refer="tr:idTrajet">
+			<xs:selector xpath="affectation" />
+			<xs:field xpath="idTrajet" />
+
+		</xs:keyref>
+
+
+	</xs:element>
+
+</xs:schema>

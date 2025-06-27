@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/qualifications"
+	xmlns="http://www.fleetman.com/qualifications"
+	elementFormDefault="qualified"
+	xmlns:sh="http://www.fleetman.com/shared"
+	xmlns:emp="http://www.fleetman.com/employe"> <!-- tells the schema that emp:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/employe -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+	<!-- Import the Employe.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/employe"
+		schemaLocation="Employe.xsd" />
+
+
+	<!-- Permis type definition -->
+
+	<xs:simpleType name="permisType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PermisC" />
+			<xs:enumeration value="PermisC1" />
+			<xs:enumeration value="PermisCE" />
+			<xs:enumeration value="PermisC1E" />
+			<xs:enumeration value="PermisD" />
+			<xs:enumeration value="PermisBE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Statut Qualification type definition -->
+
+	<xs:simpleType name="statutQualifType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Valide" />
+			<xs:enumeration value="Expiree" />
+			<xs:enumeration value="En cours de renouvellement" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Qualification complex type definition -->
+
+	<xs:complexType name="qualificationType">
+
+		<xs:sequence>
+
+			<xs:element name="idChauff" type="sh:idType" />
+
+			<xs:element name="libelle" type="xs:string" />
+
+			<xs:element name="permis" type="permisType" />
+
+
+			<xs:element name="statutQualif" type="statutQualifType" />
+
+			<xs:element name="organismeCertification" type="xs:string" />
+
+			<xs:element name="description" type="xs:string" />
+
+			<xs:element name="dateObtention" type="sh:dateType" />
+
+			<xs:element name="dateExpiration" type="sh:dateType" />
+
+		</xs:sequence>
+
+		<xs:attribute name="idQualification" use="required" />
+
+	</xs:complexType>
+
+	<!-- QualificationS complex type definition -->
+
+
+	<xs:complexType name="qualificationStype">
+		<xs:sequence>
+			<xs:element name="qualification" type="qualificationType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Global element for QualificationS -->
+
+	<xs:element name="Qualifications" type="qualificationStype">
+
+		<!-- Primary key definition for qualification element -->
+
+		<xs:key name="idQualification">
+
+			<xs:selector xpath="qualification" />
+			<xs:field xpath="@idQualification"></xs:field>
+
+		</xs:key>
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDQualification">
+
+			<xs:selector xpath="qualification" />
+			<xs:field xpath="@idQualification"></xs:field>
+
+		</xs:unique>
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idChRef" refer="emp:idChauffeur">
+			<xs:selector xpath="qualification" />
+			<xs:field xpath="idChauff"></xs:field>
+
+		</xs:keyref>
+
+	</xs:element>
+
+
+</xs:schema>

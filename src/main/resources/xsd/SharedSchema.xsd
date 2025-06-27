@@ -1,0 +1,36 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/shared"
+	xmlns="http://www.fleetman.com/shared"
+	elementFormDefault="qualified">
+
+
+	<!-- My Date type definition -->
+
+	<xs:simpleType name="dateType">
+		<xs:restriction base="xs:string">
+           <xs:pattern value="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Statut  type definition -->
+
+	<xs:simpleType name="statutType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="En cours" />
+			<xs:enumeration value="Terminee" />
+			<xs:enumeration value="En attente" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- id type definition -->
+
+	<xs:simpleType name="idType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([A-Z]+-)\d{8}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+</xs:schema>

@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fleetManProject</groupId>
+  <artifactId>fleetMan</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <properties>
+    <!-- Set the Java version -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+  
+  <dependencies>
+  <!-- Jakarta XML Bind API -->
+  <dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>4.0.2</version>
+    
+  </dependency>
+
+  <!-- JAXB Runtime for Jakarta -->
+  <dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>4.0.2</version>
+    
+  </dependency>
+  <!-- Jakarta Servlet API -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+  <groupId>jakarta.annotation</groupId>
+  <artifactId>jakarta.annotation-api</artifactId>
+  <version>2.1.1</version>
+</dependency>
+
+<!-- Jakarta Server Pages (JSP) -->
+  <dependency>
+    <groupId>jakarta.servlet.jsp</groupId>
+    <artifactId>jakarta.servlet.jsp-api</artifactId>
+    <version>3.0.0</version>
+    <scope>provided</scope>
+  </dependency>
+
+  <!-- Jakarta Expression Language (for JSP) -->
+  <dependency>
+    <groupId>jakarta.el</groupId>
+    <artifactId>jakarta.el-api</artifactId>
+    <version>5.0.0</version>
+    <scope>provided</scope>
+  </dependency>
+
+</dependencies>
+
+
+  <build>   
+	
+    <plugins>
+      <!-- JAXB2 Maven Plugin -->
+      <plugin>
+  <groupId>org.jvnet.jaxb2.maven2</groupId>
+  <artifactId>maven-jaxb2-plugin</artifactId>
+  <version>0.14.0</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>generate</goal>
+      </goals>
+      <configuration>
+        <schemaDirectory>${project.basedir}/src/main/resources/xsd</schemaDirectory>
+        <generateDirectory>${project.build.directory}/generated-sources/jaxb</generateDirectory>
+        
+        
+        
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+
+
+
+      <!-- Maven Compiler Plugin to compile the generated sources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <!-- Specify the directory for generated sources -->
+          <generatedSourcesDirectory>${project.build.directory}/generated-sources/xjc</generatedSourcesDirectory>
+        </configuration>
+      </plugin>
+      
+      <!-- Maven Dependency Plugin to download sources -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <version>3.5.0</version>
+      <executions>
+        <execution>
+          <id>download-sources</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>sources</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+      
+    </plugins>
+  </build>
+</project>

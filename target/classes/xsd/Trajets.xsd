@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.fleetman.com/trajets"
+           xmlns="http://www.fleetman.com/trajets"
+           elementFormDefault="qualified"
+           xmlns:sh="http://www.fleetman.com/shared"> 
+
+    <!-- Import the SharedSchema.xsd schema -->
+    <xs:import namespace="http://www.fleetman.com/shared"
+               schemaLocation="SharedSchema.xsd" />
+
+    <!-- Trajet complex type definition -->
+    <xs:complexType name="trajetType">
+        <xs:sequence>
+            <xs:element name="destination" type="xs:string" />
+            <xs:element name="tempsDeb" type="xs:dateTime" />
+            <xs:element name="tempsFin" type="xs:dateTime" />
+            <xs:element name="statutTache" type="sh:statutType" />
+            <xs:element name="dateTrajet" type="sh:dateType" />
+        </xs:sequence>
+        <xs:attribute name="idTrajet" type="sh:idType" use="required" />
+    </xs:complexType>
+
+    <!-- Trajets complex type definition -->
+    <xs:complexType name="trajetStype">
+        <xs:sequence>
+            <xs:element name="trajet" type="trajetType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Global element for Trajets -->
+    
+    <xs:element name="trajets" type="trajetStype">
+        <!-- Primary key definition for trajet element -->
+        <xs:key name="idTrajet">
+            <xs:selector xpath="trajet" />
+            <xs:field xpath="@idTrajet"/>
+        </xs:key>
+
+        <!-- Unique id constraint -->
+        <xs:unique name="uniqIDTrajet">
+            <xs:selector xpath="trajet" />
+            <xs:field xpath="@idTrajet"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>

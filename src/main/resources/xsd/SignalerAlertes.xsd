@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/alertes"
+	xmlns="http://www.fleetman.com/alertes"
+	elementFormDefault="qualified"
+	xmlns:veh="http://www.fleetman.com/vehicules"
+	xmlns:tr="http://www.fleetman.com/trajets"
+	xmlns:emp="http://www.fleetman.com/employe"
+	xmlns:sh="http://www.fleetman.com/shared"> <!-- tells the schema that sh:
+	will refer to elements and types from the namespace
+	http://www.fleetman.com/shared -->
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+	<!-- Import the Employe.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/employe"
+		schemaLocation="Employe.xsd" />
+
+	<!-- Import the Vehicules.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/vehicules"
+		schemaLocation="Vehicules.xsd" />
+
+	<!-- Import the Trajets.xsd schema -->
+	<xs:import namespace="http://www.fleetman.com/trajets"
+		schemaLocation="Trajets.xsd" />
+
+	
+
+
+	<!-- Statut Alerte type definition -->
+
+	<xs:simpleType name="statutAlerteType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Prise en charge" />
+			<xs:enumeration value="Resolue" />
+			<xs:enumeration value="En attente" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Alerte complex type definition -->
+
+	<xs:complexType name="alerteType">
+
+		<xs:sequence>
+
+			<xs:element name="idChauff" type="sh:idType" />
+
+			<xs:element name="idVehic" type="sh:idType" />
+
+			<xs:element name="idTraj" type="sh:idType" />
+
+			<xs:element name="typeAlerte" type="xs:string" />
+
+			<xs:element name="description" type="xs:string" />
+
+			<xs:element name="statutAlerte" type="statutAlerteType" />
+
+			<xs:element name="dateAlerte" type="sh:dateType" />
+
+		</xs:sequence>
+
+		<xs:attribute name="idAlerte" type="sh:idType" use="required" />
+
+	</xs:complexType>
+
+
+	<!-- AlerteS complex type definition -->
+
+
+	<xs:complexType name="alerteStype">
+		<xs:sequence>
+			<xs:element name="alerte" type="alerteType" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Global element for AlerteS -->
+
+	<xs:element name="Alertes" type="alerteStype">
+
+
+		<!-- Primary key definition for alerte element -->
+
+		<xs:key name="idAlerte">
+
+			<xs:selector xpath="alerte" />
+			<xs:field xpath="@idAlerte" />
+
+		</xs:key>
+
+		<!-- Unique id constraint -->
+
+		<xs:unique name="uniqIDalerte">
+
+			<xs:selector xpath="alerte" />
+			<xs:field xpath="@idAlerte" />
+
+		</xs:unique>
+
+		<!-- Reference to foreign key idChauffeur -->
+
+		<xs:keyref name="idChRef" refer="emp:idChauffeur">
+
+			<xs:selector xpath="alerte" />
+			<xs:field xpath="idChauff" />
+
+		</xs:keyref>
+
+
+		<!-- Reference to foreign key idVehicule -->
+
+		<xs:keyref name="idVehRef" refer="veh:idVehicule">
+			<xs:selector xpath="alerte" />
+			<xs:field xpath="idVehic" />
+
+		</xs:keyref>
+
+		<!-- Reference to foreign key idTrajet -->
+
+		<xs:keyref name="idTrajRef" refer="tr:idTrajet">
+			<xs:selector xpath="alerte" />
+			<xs:field xpath="idTraj" />
+
+		</xs:keyref>
+
+
+	</xs:element>
+
+</xs:schema>

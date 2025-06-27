@@ -1,0 +1,43 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.fleetman.com/gps"
+	xmlns="http://www.fleetman.com/gps"
+	elementFormDefault="qualified"
+	xmlns:veh="http://www.fleetman.com/vehicules"
+	xmlns:sh="http://www.fleetman.com/shared">
+
+	<!-- Import the SharedSchema.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/shared"
+		schemaLocation="SharedSchema.xsd" />
+
+	<!-- Import the Vehicules.xsd schema -->
+
+	<xs:import namespace="http://www.fleetman.com/vehicules"
+		schemaLocation="Vehicules.xsd" />
+
+	<xs:element name="VehicleLocation">
+		<xs:complexType>
+			<xs:sequence>
+
+				<xs:element name="idVehic" type="sh:idType" />
+
+				<xs:element name="latitude" type="xs:decimal" />
+
+				<xs:element name="longitude" type="xs:decimal" />
+
+				<xs:element name="status" type="xs:string" />
+
+			</xs:sequence>
+		</xs:complexType>
+
+		<!-- Reference to foreign key idVehicule -->
+
+		<xs:keyref name="idVehic" refer="veh:idVehicule">
+
+			<xs:selector xpath="VehicleLocation" />
+			<xs:field xpath="idVehic"></xs:field>
+
+		</xs:keyref>
+
+	</xs:element>
+</xs:schema>
